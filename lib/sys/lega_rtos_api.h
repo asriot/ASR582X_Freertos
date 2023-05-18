@@ -79,6 +79,9 @@ typedef void* xTimerHandle;
 typedef uint32_t lega_time_t;
 typedef void* xTaskHandle;
 
+typedef uint32_t lega_tick_t;
+typedef void * lega_timeout_t;
+
 typedef struct
 {
     void *          handle;
@@ -562,6 +565,9 @@ uint32_t lega_rtos_get_free_heap_size(void);
 uint32_t lega_rtos_get_total_size(void);
 uint32_t lega_rtos_get_minimum_free_heap_size(void);
 
+void lega_rtos_set_timeout(lega_timeout_t *timeout);
+OSBool lega_rtos_check_timeout(lega_timeout_t *timeout,lega_tick_t *wait_ticks);
+uint32_t ms_to_tick(uint32_t timeout_ms);
 #ifdef __cplusplus
 }
 #endif
