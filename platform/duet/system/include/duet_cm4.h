@@ -208,14 +208,29 @@ typedef struct
 #endif
 
 #if (0x200000 == FLASH_MAX_SIZE)
-    #ifdef _FLASH_DIRECT_BOOT_EN_
-        #define BOOTLOADER_FLASH_START_ADDR 0x00000000
-        #define INFO_FLASH_START_ADDR       0x00010000
-        #define APP_FLASH_START_ADDR        0x00040000
-        #define OTA_FLASH_START_ADDR        0x00100000
-        #define KV_FLASH_START_ADDR         0x001E0000
-        #define OLL_FLASH_START_ADDR        0x001E4000
+
+    #ifdef _OTA_CMP_VENDOR_
+
+        #define BOOTLOADER_FLASH_START_ADDR 0x10000000
+        #define INFO_FLASH_START_ADDR       0x10010000
+        #define APP_FLASH_START_ADDR        0x10012000
+        #define OTA_FLASH_START_ADDR        0x1013E000
+        #define KV_FLASH_START_ADDR         0x101EE000
+        #define NVDS_FLASH_START_ADDR       0x101FC000
+        #define OLL_FLASH_START_ADDR        0x101FE000
+        #define MATTER_FLASH_START_ADDR     0x101FF000
+
+        #define BOOTLOADER_MAX_SIZE         0x10000
+        #define INFO_MAX_SIZE               0x2000
+        #define APP_MAX_SIZE                0x12C000
+        #define OTA_MAX_SIZE                0xB0000
+        #define KV_MAX_SIZE                 0xE000
+        #define NVDS_MAX_SIZE               0x2000
+        #define OLL_MAX_SIZE                0x1000
+        #define MATTER_CONFIG_MAX_SIZE      0x1000
+
     #else
+
         #define BOOTLOADER_FLASH_START_ADDR 0x10000000
         #define INFO_FLASH_START_ADDR       0x10010000
         #define APP_FLASH_START_ADDR        0x10012000
@@ -223,33 +238,29 @@ typedef struct
         #define KV_FLASH_START_ADDR         0x101EE000
         #define NVDS_FLASH_START_ADDR       0x101FC000
         #define OLL_FLASH_START_ADDR        0x101FE000
+        #define MATTER_FLASH_START_ADDR     0x101FF000
+
+        #define BOOTLOADER_MAX_SIZE         0x10000
+        #define INFO_MAX_SIZE               0x2000
+        #define APP_MAX_SIZE                0xEE000
+        #define OTA_MAX_SIZE                0xEE000
+        #define KV_MAX_SIZE                 0xE000
+        #define NVDS_MAX_SIZE               0x2000
+        #define OLL_MAX_SIZE                0x1000
+        #define MATTER_CONFIG_MAX_SIZE      0x1000
+
     #endif
 
-    #define BOOTLOADER_MAX_SIZE         0x10000
-    #define INFO_MAX_SIZE               0x2000
-    #define APP_MAX_SIZE                0xEE000
-    #define OTA_MAX_SIZE                0xEE000
-    #define KV_MAX_SIZE                 0xE000
-    #define NVDS_MAX_SIZE               0x2000
-    #define OLL_MAX_SIZE                0x1000
 #elif (0x400000 == FLASH_MAX_SIZE)
-    #ifdef _FLASH_DIRECT_BOOT_EN_
-        #define BOOTLOADER_FLASH_START_ADDR 0x00000000
-        #define INFO_FLASH_START_ADDR       0x00010000
-        #define APP_FLASH_START_ADDR        0x00040000
-        #define OTA_FLASH_START_ADDR        0x00200000
-        #define KV_FLASH_START_ADDR         0x001E0000
-        #define OLL_FLASH_START_ADDR        0x001E4000
-    #else
-        #define BOOTLOADER_FLASH_START_ADDR 0x10000000
-        #define INFO_FLASH_START_ADDR       0x10010000
-        #define APP_FLASH_START_ADDR        0x10012000
-        #define OTA_FLASH_START_ADDR        0x10200000
-        #define KV_FLASH_START_ADDR         0x101EE000
-        #define NVDS_FLASH_START_ADDR       0x101FC000
-        #define OLL_FLASH_START_ADDR        0x101FE000
-        #define MATTER_FLASH_START_ADDR     0x101C1000
-    #endif
+
+    #define BOOTLOADER_FLASH_START_ADDR 0x10000000
+    #define INFO_FLASH_START_ADDR       0x10010000
+    #define APP_FLASH_START_ADDR        0x10012000
+    #define OTA_FLASH_START_ADDR        0x10200000
+    #define KV_FLASH_START_ADDR         0x101EE000
+    #define NVDS_FLASH_START_ADDR       0x101FC000
+    #define OLL_FLASH_START_ADDR        0x101FE000
+    #define MATTER_FLASH_START_ADDR     0x101C1000
 
     #define BOOTLOADER_MAX_SIZE         0x10000
     #define INFO_MAX_SIZE               0x2000

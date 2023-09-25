@@ -24,12 +24,12 @@
 #include "duet.h"
 #include "duet_gpio.h"
 
- #if defined ADC_ENABLE
+#if defined ADC_ENABLE
 duet_adc_callback_func g_duet_adc_callback_handler;
-static uint8_t rec_mode = 0;
+//static uint8_t rec_mode = 0;
 static void duet_rf_auxadc_mode(AUX_ADC_MOD mode)
 {
-    uint8_t tmp=0;
+/*     uint8_t tmp=0;
     static uint8_t cfg_fg=1;
     if (cfg_fg !=1)
     {
@@ -39,8 +39,12 @@ static void duet_rf_auxadc_mode(AUX_ADC_MOD mode)
           return;
       }
     }
-    rec_mode=mode;
-    // printf("first init!!!\r\n");
+    rec_mode=mode; */
+    uint32_t temp_value = 0;
+    __disable_irq();
+    *(volatile uint32_t *)(0x40000840) = (0x01<<15);  // open wifi bus clk
+    temp_value =  *(volatile uint32_t *)(0x60920004); // set wifi only mode
+    *(volatile uint32_t *)(0x60920004) = 0x30000;
     rf_set_reg_bit(0xa3,12,2,ADC_SAMPLE_125K);
     // Enable AUXADC
     rf_set_reg_bit(0x06, 14, 1, 0x0);
@@ -56,13 +60,12 @@ static void duet_rf_auxadc_mode(AUX_ADC_MOD mode)
     }
     else if (mode == MOD_CNT10)
     {
-
         rf_set_reg_bit(0xA3, 6, 1, 0x1);
-
     }
-    cfg_fg=0;
+//    cfg_fg=0;
+    *(volatile uint32_t *)(0x60920004) = temp_value;
+    __enable_irq();
     delay(250);
-
 }
 
 int32_t duet_adc_init(duet_adc_dev_t *adc_config)
@@ -83,7 +86,7 @@ int32_t duet_adc_init(duet_adc_dev_t *adc_config)
     REG_WR(PAD_PE_REG, (reg_value & (~(1 << config_gpio.port))));
 //    adc_config->duet_adc_handler_struct.cb = adc_config->priv;
 //    duet_rf_auxadc_mode(adc_config->mode);
-     if (adc_config->priv)
+    if (adc_config->priv)
     {
         duet_rf_auxadc_mode(MOD_CNT10);
     }
@@ -92,6 +95,10 @@ int32_t duet_adc_init(duet_adc_dev_t *adc_config)
         duet_rf_auxadc_mode(MOD_TRIG);
     }
     REG_WR(SYS_REG_BASE_CLKCTRL_ENABLE,REG_RD(SYS_REG_BASE_CLKCTRL_ENABLE) | AUX_ADC_CLK);
+    // Enable AUXADC
+    // Enable TMMT
+    // Enable CLK AUXADC13M; D_XO_CLK_AUXADC13M_EN= 1
+    // Enable XO CLK AUCADC, DFF's RB;D_RST_XO_CLK_AUXADC= 0
     // Open channel 1
     if (adc_config->port <= 7)
     {
@@ -128,14 +135,23 @@ int32_t duet_adc_init(duet_adc_dev_t *adc_config)
 int32_t duet_adc_get(duet_adc_dev_t *adc_config)
 {
     int32_t vol_value = 0;
-    if (rf_get_reg_bit(0x06, 14, 1))
+    uint32_t reg_val = 0,temp_value = 0;
+    __disable_irq();
+    *(volatile uint32_t *)(0x40000840) = (0x01<<15);  // open wifi bus clk
+    temp_value =  *(volatile uint32_t *)(0x60920004); // set wifi only mode
+    *(volatile uint32_t *)(0x60920004) = 0x30000;
+    reg_val = rf_get_reg_bit(0x06, 14, 1);
+    *((volatile uint32_t *)(0x60920004)) = temp_value;
+    __enable_irq();
+    if (reg_val)
     {
         return 0;
     }
     vol_value = (ADC->ADC_DATA & 0xFFF0) >> 4;
     if (adc_config->port < 8)
     {
-        return (int32_t)(0.4243 * vol_value + 6.9805);
+//        return (int32_t)(0.4243 * vol_value + 6.9805);
+        return (int32_t)(0.3907 * vol_value);
     }
     else
     {
@@ -172,6 +188,8 @@ int32_t duet_tempr_get(duet_adc_dev_t *adc_config)
 int32_t duet_adc_finalize(duet_adc_dev_t *adc_config)
 {
     REG_WR(SYS_REG_BASE_CLKCTRL_ENABLE,REG_RD(SYS_REG_BASE_CLKCTRL_ENABLE) &(~AUX_ADC_CLK));
+  // Close XO CLK AUCADC; D_RST_XO_CLK_AUXADC= 1
+  // Close CLK AUXADC13M; D_XO_CLK_AUXADC13M_EN= 0
     ADC->BITS_ADC_CTRL.adc_int_clr = 0;
     ADC->BITS_ADC_CTRL.adc_int_mode = 0;
     ADC->BITS_ADC_CTRL.adc_int_en = 0;
@@ -197,4 +215,4 @@ void AUX_ADC_IRQHandler(void)
     }
 }
 
- #endif
+#endif

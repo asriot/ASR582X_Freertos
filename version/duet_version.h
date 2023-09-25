@@ -16,7 +16,7 @@
 #define _DUET_VERSION_H_
 
 //ASR release version
-#define LEGA_VERSION_STR      "APP-V1.8.1"
+#define LEGA_VERSION_STR      "APP-V1.9.0"
 
 #endif  //_DUET_VERSION_H_
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -2507,10 +2507,11 @@ void sonata_mesh_notify_ota_stop(void);
  ***********************************************************
  * @brief  set secure network beacon state
  * @param[in] bcn_state secure network beacon state 0:close 1:open
- * @return void
+ * @return STATUS
+ * @retval MESH_ERROR_NOT_READY       No ready
  ************************************************************
 */
-void sonata_mesh_api_set_sec_beacon_state(uint8_t bcn_state);
+STATUS sonata_mesh_api_set_sec_beacon_state(uint8_t bcn_state);
 
 /**
  ***********************************************************

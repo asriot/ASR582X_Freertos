@@ -121,6 +121,33 @@ int32_t duet_spi_cpol_cpha_config(duet_spi_dev_t * spi,uint8_t mode)
     return 0;
 }
 
+int32_t duet_spi_datasize(duet_spi_dev_t * spi,uint8_t data_size)
+{
+    SPI_TypeDef* SPIx = NULL;
+    if(DUET_SPI0_INDEX == spi->port)
+    {
+        SPIx = SPI0;
+    }
+    else if(DUET_SPI1_INDEX == spi->port)
+    {
+        SPIx = SPI1;
+    }
+    else if(DUET_SPI2_INDEX == spi->port)
+    {
+        SPIx = SPI2;
+    }
+    else
+    {
+        return EIO;
+    }
+    SPIx->CR1 &= ~(0x1<<1);
+    /* set data size */
+    SPIx->CR0 &= ~(0xf);   // reset data size to 0
+    SPIx->CR0 |= (data_size & 0xf);
+    SPIx->CR1 |= (0x1<<1);
+    return 0;
+}
+
 int32_t duet_spi_init(duet_spi_dev_t * spi)
 {
     uint32_t tmp_value,spi_clk = SPI_CLK;

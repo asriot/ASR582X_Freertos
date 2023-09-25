@@ -405,6 +405,9 @@ int32_t duet_uart_finalize(duet_uart_dev_t *uart)
         return EIO;
     }
 
+    // wait for the end of current charater
+    while(duet_uart_get_flag_status(UARTx, UART_FLAG_BUSY));
+
     //disable all uart interrupt
     UARTx->IMSC  = UART_DISABLE_ALL_IRQ;
     //disable all uart config

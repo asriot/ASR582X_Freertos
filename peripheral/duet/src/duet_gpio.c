@@ -142,6 +142,10 @@ int32_t duet_gpio_init(duet_gpio_dev_t *gpio)
                 {
                     GPIO_GROUP0->OUTENCLR = (1 << gpio->port);
                 }
+                reg_value = REG_RD(HW_CTRL_PE_PS);
+                REG_WR(HW_CTRL_PE_PS, (reg_value & (~(1 << gpio->port))));
+                reg_value = REG_RD(PAD_PE_REG);
+                REG_WR(PAD_PE_REG, (reg_value & (~(1 << gpio->port))));
                 break;
             case DUET_OUTPUT_PUSH_PULL:
             case DUET_OUTPUT_OPEN_DRAIN_NO_PULL:
@@ -193,6 +197,10 @@ int32_t duet_gpio_init(duet_gpio_dev_t *gpio)
                 {
                     GPIO_GROUP1->OUTENCLR = (1 << (gpio->port-DUET_GPIO_NUM_PER_GROUP));
                 }
+                reg_value = REG_RD(HW_CTRL_PE_PS);
+                REG_WR(HW_CTRL_PE_PS, (reg_value & (~(1 << gpio->port))));
+                reg_value = REG_RD(PAD_PE_REG);
+                REG_WR(PAD_PE_REG, (reg_value & (~(1 << gpio->port))));
                 break;
             case DUET_OUTPUT_PUSH_PULL:
             case DUET_OUTPUT_OPEN_DRAIN_NO_PULL:
@@ -406,7 +414,6 @@ int32_t duet_gpio_enable_irq(duet_gpio_dev_t *gpio, duet_gpio_irq_trigger_t trig
                 GPIO_GROUP0->INTTYPECLR = (1 << gpio->port);
                 GPIO_GROUP0->INTPOLCLR = (1 << gpio->port);
                 break;
-            case DUET_IRQ_TRIGGER_BOTH_EDGES:
             default:
                 return EIO;
         }
@@ -432,7 +439,6 @@ int32_t duet_gpio_enable_irq(duet_gpio_dev_t *gpio, duet_gpio_irq_trigger_t trig
                 GPIO_GROUP1->INTTYPECLR = (1 << (gpio->port-DUET_GPIO_NUM_PER_GROUP));
                 GPIO_GROUP1->INTPOLCLR = (1 << (gpio->port-DUET_GPIO_NUM_PER_GROUP));
                 break;
-            case DUET_IRQ_TRIGGER_BOTH_EDGES:
             default:
                 return EIO;
         }

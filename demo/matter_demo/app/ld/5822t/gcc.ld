@@ -173,6 +173,13 @@ SECTIONS
     _efunc = .;        /* define a global symbol at func end */
   } >ITCM  AT>FLASH
 
+  /* Must the last section in FLASH */
+  .partition :
+  {
+    . = ALIGN(4);
+    KEEP(*(ota_max_size_sec))
+  } >FLASH
+
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

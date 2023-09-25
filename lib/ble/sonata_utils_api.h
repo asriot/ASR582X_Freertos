@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -405,6 +405,18 @@ bool sonata_get_adv_report_info(uint8_t type, uint8_t *info, uint16_t info_lengt
  * @return System tick
  */
 uint32_t sonata_get_sys_time();
+
+/*!
+ * @brief convert millisecond to half slot
+ * @return half slot
+ */
+uint32_t sonata_ms_2_hs(uint32_t ms);
+
+/*!
+ * @brief convert half slot to millisecond
+ * @return millisecond
+ */
+uint32_t sonata_hs_2_ms(uint32_t hs);
 
 
 /*!

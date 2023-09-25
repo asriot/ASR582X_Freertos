@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -147,11 +147,13 @@ void sonata_ble_isr(void);
  * FUNCTION DECLARATIONS             Connection help function End
  ****************************************************************************************
  */
-#ifdef CFG_RF_2_4G
+//#ifdef CFG_RF_2_4G
 typedef  void (*pf_sonata_2_4g_isr_t )(void);
 
 extern pf_sonata_2_4g_isr_t pf_sonata_2_4g_isr;
-#endif
+extern uint32_t sonata_2_4g_open;
+
+//#endif
 /** @}*/
 
 

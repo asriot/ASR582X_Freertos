@@ -316,18 +316,27 @@ SEG_I2C int32_t duet_i2c_master_send(duet_i2c_dev_t *i2c, uint16_t dev_addr, con
     I2Cx->CR &= (~I2C_CR_SEND_NACK);
     I2Cx->CR |= I2C_TRANS_BEGIN;
 
-    // send slave address first
-    I2Cx->WFIFO = (((uint8_t)(dev_addr & 0x00FF)) << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB;
-    //wait till tx fifo is empty to avoid overflowing tx fifo
-    while( !i2c_get_flag_status(I2Cx, I2C_STATUS_TX_FIFO_EMPTY) )
+    if(i2c_get_flag_status(I2Cx, I2C_STATUS_BUS_ERROR_DET))
     {
-        if(g_duet_i2c_timeout)
+        ret = -EBUSERR; //bus error
+        goto EXIT;
+    }
+    else
+    {
+        // send slave address first
+        I2Cx->WFIFO = (((uint8_t)(dev_addr & 0x00FF)) << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB;
+        //wait till tx fifo is empty to avoid overflowing tx fifo
+        while( !i2c_get_flag_status(I2Cx, I2C_STATUS_TX_FIFO_EMPTY) )
         {
-            g_duet_i2c_timeout = 0;
-            ret = -ETIMEOUT;
-            goto EXIT;
+            if(g_duet_i2c_timeout)
+            {
+                g_duet_i2c_timeout = 0;
+                ret = -ETIMEOUT;
+                goto EXIT;
+            }
         }
     }
+
     // send write cmd
     while(1)
     {
@@ -477,8 +486,27 @@ SEG_I2C int32_t duet_i2c_master_recv(duet_i2c_dev_t *i2c, uint16_t dev_addr, uin
     I2Cx->CR &= (~I2C_CR_SEND_NACK);
     I2Cx->CR |= I2C_TRANS_BEGIN;
 
-    // send slave address first
-    I2Cx->WFIFO = (dev_addr << 1) | I2C_READ | I2C_SEND_START | I2C_TB;
+    if(i2c_get_flag_status(I2Cx, I2C_STATUS_BUS_ERROR_DET))
+    {
+        ret = -EBUSERR; //bus error
+        goto EXIT;
+    }
+    else
+    {
+        // send slave address first
+        I2Cx->WFIFO = (dev_addr << 1) | I2C_READ | I2C_SEND_START | I2C_TB;
+        //wait till tx fifo is empty to avoid overflowing tx fifo
+        while( !i2c_get_flag_status(I2Cx, I2C_STATUS_TX_FIFO_EMPTY) )
+        {
+            if(g_duet_i2c_timeout)
+            {
+                g_duet_i2c_timeout = 0;
+                ret = -ETIMEOUT;
+                goto EXIT;
+            }
+        }
+    }
+
     while(i < size)
     {
         while(get_fifo_size() == 8);
@@ -589,8 +617,26 @@ int32_t duet_i2c_master_repeated_write_read(duet_i2c_dev_t *i2c, uint8_t slave_a
     // set TXBEGIN bit before starting another transfer
     I2Cx->CR |= I2C_TRANS_BEGIN;
 
-    // send slave address first
-    I2Cx->WFIFO = (slave_addr << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB;
+    if(i2c_get_flag_status(I2Cx, I2C_STATUS_BUS_ERROR_DET))
+    {
+        ret = -EBUSERR; //bus error
+        goto EXIT;
+    }
+    else
+    {
+        // send slave address first
+        I2Cx->WFIFO = (slave_addr << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB;
+        //wait till tx fifo is empty to avoid overflowing tx fifo
+        while( !i2c_get_flag_status(I2Cx, I2C_STATUS_TX_FIFO_EMPTY) )
+        {
+            if(g_duet_i2c_timeout)
+            {
+                g_duet_i2c_timeout = 0;
+                ret = -ETIMEOUT;
+                goto EXIT;
+            }
+        }
+    }
 
     // send write cmd
     while(1)
@@ -798,8 +844,26 @@ int32_t duet_i2c_mem_write(duet_i2c_dev_t *i2c, uint16_t dev_addr, uint16_t mem_
     // set TXBEGIN bit before starting another transfer
     I2Cx->CR |= I2C_TRANS_BEGIN;
 
-    // send slave address first
-    i2c_write_byte(I2Cx, ((uint8_t)dev_addr << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB);
+    if(i2c_get_flag_status(I2Cx, I2C_STATUS_BUS_ERROR_DET))
+    {
+        ret = -EBUSERR; //bus error
+        goto EXIT;
+    }
+    else
+    {
+        // send slave address first
+        i2c_write_byte(I2Cx, ((uint8_t)dev_addr << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB);
+        //wait till tx fifo is empty to avoid overflowing tx fifo
+        while( !i2c_get_flag_status(I2Cx, I2C_STATUS_TX_FIFO_EMPTY) )
+        {
+            if(g_duet_i2c_timeout)
+            {
+                g_duet_i2c_timeout = 0;
+                ret = -ETIMEOUT;
+                goto EXIT;
+            }
+        }
+    }
 
     // send memory address
     for( i = 0; i < mem_addr_size; i++)
@@ -932,8 +996,26 @@ int32_t duet_i2c_mem_read(duet_i2c_dev_t *i2c, uint16_t dev_addr, uint16_t mem_a
     // set TXBEGIN bit before starting another transfer
     I2Cx->CR |= I2C_TRANS_BEGIN;
 
-    // send slave address first
-    i2c_write_byte(I2Cx, ((uint8_t)dev_addr << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB);
+    if(i2c_get_flag_status(I2Cx, I2C_STATUS_BUS_ERROR_DET))
+    {
+        ret = -EBUSERR; //bus error
+        goto EXIT;
+    }
+    else
+    {
+        // send slave address first
+        i2c_write_byte(I2Cx, ((uint8_t)dev_addr << 1) | I2C_WRITE | I2C_SEND_START | I2C_TB);
+        //wait till tx fifo is empty to avoid overflowing tx fifo
+        while( !i2c_get_flag_status(I2Cx, I2C_STATUS_TX_FIFO_EMPTY) )
+        {
+            if(g_duet_i2c_timeout)
+            {
+                g_duet_i2c_timeout = 0;
+                ret = -ETIMEOUT;
+                goto EXIT;
+            }
+        }
+    }
 
     // send memory address
     for( i = 0; i < mem_addr_size; i++)
