@@ -69,6 +69,15 @@ void duet_wdg_stop(void);
 void duet_wdg_start(void);
 
 /**
+ * This function for get watchdog feed status.
+ *
+ * @param[in]  NULL
+ *
+ * @return  1: need feed; 0: no need feed;
+ */
+int32_t duet_wdg_need_feed(void);
+
+/**
  * This function performs any platform-specific cleanup needed for hardware watch dog.
  *
  * @param[in]  wdg  the watch dog device

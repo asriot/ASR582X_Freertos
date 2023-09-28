@@ -14,7 +14,11 @@
  */
 
 #include "duet_i2s.h"
+#include "duet_rf_spi.h"
+
+#ifdef I2S_DEMO
 #include "apll_rf.h"
+#endif
 
 duet_i2s_callback_func g_duet_i2s_callback_handler;
 
@@ -125,6 +129,24 @@ void duet_i2s_master_clock_cmd(I2S_TypeDef * I2Sx, uint32_t new_state)
     }
 }
 
+int duet_i2s_config_apll_clk(uint32_t clk_src)
+{
+#ifdef I2S_DEMO //only needed in i2s demo, because apll will be ready after system init
+    duet_soc_wifi_clk_enable();
+    duet_soc_mac_phy_clock_enable();
+#endif
+
+    if(clk_src == I2S_MCLK_SRC_FREQ72)
+        spi_mst_write(0xfd, 0x20df);    //72M
+    else if(clk_src == I2S_MCLK_SRC_FREQ96)
+        spi_mst_write(0xfd, 0x219f);    //96M
+    else if(clk_src == I2S_MCLK_SRC_FREQ120)
+        spi_mst_write(0xfd, 0x211f);    //120M
+    else
+        return -1;
+    return 0;
+}
+
 int duet_i2s_init(I2S_TypeDef * I2Sx, duet_i2s_dev_t * pI2S_struct)
 {
     uint32_t mclk_divider = 0;
@@ -168,7 +190,7 @@ int duet_i2s_init(I2S_TypeDef * I2Sx, duet_i2s_dev_t * pI2S_struct)
         sclk_divider = pI2S_struct->i2s_mclk_src / mclk_divider / pI2S_struct->i2s_sample_rate / lrclk_divider;
     }
 
-    if(duet_config_apll_clk(pI2S_struct->i2s_mclk_src) != 0)
+    if(duet_i2s_config_apll_clk(pI2S_struct->i2s_mclk_src) != 0)
         return EIO;
 
     duet_i2s_master_clock_cmd(I2Sx, ENABLE);

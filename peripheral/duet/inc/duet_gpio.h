@@ -90,7 +90,6 @@ typedef enum {
     DUET_IRQ_TRIGGER_FALLING_EDGE = 0x2, /* Interrupt triggered at input signal's falling edge */
     DUET_IRQ_TRIGGER_HIGH_LEVEL   = 0x3, /* Interrupt triggered at input signal's high level   */
     DUET_IRQ_TRIGGER_LOW_LEVEL    = 0x4, /* Interrupt triggered at input signal's low level    */
-    DUET_IRQ_TRIGGER_BOTH_EDGES   = 0x5, /* Interrupt triggered at input signal's rising edge and falling edge  */
 } duet_gpio_irq_trigger_t;
 
 /*

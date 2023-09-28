@@ -16,6 +16,7 @@
 #include "mbedtls/entropy_poll.h"
 
 #ifdef MBEDTLS_ENTROPY_HARDWARE_ALT
+
 #include "stdio.h"
 #include "asr_rnd.h"
 #include "asr_sec_hw_common.h"

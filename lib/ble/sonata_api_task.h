@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -80,6 +80,13 @@ typedef enum
 
 typedef enum
 {
+    SONATA_INT_EVENT_BLE_DATA           = (0xD1),
+    SONATA_INT_EVENT                    = (0xD2),
+    SONATA_2_4G_PKT_MSG,
+}sonata_api_internal_event;
+
+typedef enum
+{
     APP_INTERNAL_TIMER_START          = (15),
 #ifdef SONATA_CFG_LOW_POWER
     APP_INTERNAL_TIMER_LP_RCO32K_CALI_PWON,
@@ -134,5 +141,10 @@ extern const sonata_api_subtask_handlers_t *p_prf_sec_api_ke_msg_handlers;
 #if (CORE_BLUETOOTH_RESOURCE)
 extern pf_mem_config_t pf_mem_config_patch;
 #endif
+
+#ifdef SONATA_CFG_LOW_POWER
+void sonata_api_lp_timer_triggle(void);
+#endif
+
 #endif //_SONATA_API_TASK_H_
 

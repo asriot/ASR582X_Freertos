@@ -27,6 +27,9 @@
 #include "mpu.h"
 
 #include "pmu.h"
+
+OTA_MAX_SIZE_SEG const uint32_t ota_max_size = OTA_MAX_SIZE;
+
 extern pmu_state_t current_state;
 extern void *_vtable_start;
 

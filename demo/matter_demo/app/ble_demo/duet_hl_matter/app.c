@@ -2629,8 +2629,7 @@ void app_user_config_write_cb(uint16_t handle, uint8_t * data, uint16_t size)
     s_indicateEnable = *(uint16_t *) data;
     if (s_indicateEnable == 0x0002)
     {
-        int32_t send_status = sonata_ble_gatt_send_indicate_event(0, handle, size, data); // 0x0200
-        printf("send status %ld\r\n", send_status);
+        sonata_ble_gatt_send_indicate_event(0, handle, size, data); // 0x0200
     }
 }
 
@@ -2755,7 +2754,6 @@ static uint8_t app_ble_search_svc(uint8_t * service_uuid)
 
 int app_ble_gatt_add_svc_helper(uint16_t * start_hdl, uint8_t nb_att, uint8_t vendor, ble_gatt_att_reg_t * atts)
 {
-
     APP_TRC("APP: %s ,nb_att=%d, \r\n", __FUNCTION__, nb_att);
     uint8_t perm = atts[0].att_desc.perm;
     // PERM_SET(perm, SVC_UUID_LEN,2);

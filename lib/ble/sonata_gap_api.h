@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -1059,9 +1059,9 @@ typedef struct  {
     //    uint16_t audio_cfg;
     #ifdef CFG_PLF_SONATA
     /// ------------------ LE PHY Management  -------------------------
-    /// Preferred LE PHY for data transmission (@see enum gap_phy)
+    /// Preferred LE PHY for data transmission (@see enum sonata_gap_phy)
     uint8_t tx_pref_phy;
-    /// Preferred LE PHY for data reception (@see enum gap_phy)
+    /// Preferred LE PHY for data reception (@see enum sonata_gap_phy)
     uint8_t rx_pref_phy;
     #endif
 
@@ -1683,6 +1683,104 @@ struct sonata_gap_bond_cfm
     union sonata_gap_bond_cfm_data data;
 };
 
+typedef struct sonata_ble_build_legacy_adv_param {
+    //whether set scan rsp  data
+    bool set_scan_rsp;
+    ///device's address type, @see sonata_gap_own_addr
+    uint8_t own_addr_type;
+    /// Maximum number of extended advertising events the controller shall attempt to send prior to
+    /// terminating the extending advertising
+    /// Valid only if extended advertising
+    uint8_t max_adv_evt;
+    /// buffer of adv data
+    uint8_t *adv_data;
+    /// buffer of scan rsp data
+    uint8_t *scan_rsp_data;
+    /// Advertising duration (in unit of 10ms). 0 means that advertising continues
+    /// until the host disable it
+    uint16_t duration;
+    ///length of adv data
+    uint16_t adv_data_length;
+    ///length of scan rsp data
+    uint16_t scan_rsp_data_length;
+    ///@see sonata_gap_directed_adv_create_param_t
+    sonata_gap_directed_adv_create_param_t create_param;
+}sonata_ble_build_legacy_adv_param_t;
+
+typedef struct sonata_ble_build_extended_adv_param {
+    ///whether set adv data
+    bool set_adv;
+    ///whether set scan rsp data
+    bool set_scan_rsp;
+    ///device's address type, @see sonata_gap_own_addr
+    uint8_t own_addr_type;
+    /// Maximum number of extended advertising events the controller shall attempt to send prior to
+    /// terminating the extending advertising
+    /// Valid only if extended advertising
+    uint8_t max_adv_evt;
+    /// buffer of adv data
+    uint8_t *adv_data;
+    /// buffer of scan rsp data
+    uint8_t *scan_rsp_data;
+    /// Advertising duration (in unit of 10ms). 0 means that advertising continues
+    /// until the host disable it
+    uint16_t duration;
+    ///length of adv data
+    uint16_t adv_data_length;
+    ///length of scan rsp data
+    uint16_t scan_rsp_data_length;
+    ///@see sonata_gap_extended_adv_create_param_t
+    sonata_gap_extended_adv_create_param_t create_param;
+}sonata_ble_build_extended_adv_param_t;
+
+typedef struct sonata_ble_build_periodic_adv_param {
+    ///whether set adv data
+    bool set_adv;
+    ///whether set period data
+    bool set_period_adv;
+    ///device's address type, @see sonata_gap_own_addr
+    uint8_t own_addr_type;
+    /// Maximum number of extended advertising events the controller shall attempt to send prior to
+    /// terminating the extending advertising
+    /// Valid only if extended advertising
+    uint8_t max_adv_evt;
+    /// buffer of adv data
+    uint8_t *adv_data;
+    /// buffer of period data
+    uint8_t *period_adv_data;
+    /// Advertising duration (in unit of 10ms). 0 means that advertising continues
+    /// until the host disable it
+    uint16_t duration;
+    ///length of adv data
+    uint16_t adv_data_length;
+    ///length of period data
+    uint16_t period_adv_data_length;
+    ///@see sonata_gap_periodic_adv_create_param_t
+    sonata_gap_periodic_adv_create_param_t create_param;
+}sonata_ble_build_periodic_adv_param_t;
+
+typedef struct sonata_gap_build_per_sync_param {
+    ///device's address type, @see sonata_gap_own_addr
+    uint8_t own_addr_type;
+    ///@see sonata_gap_per_sync_param_t
+    sonata_gap_per_sync_param_t create_param;
+}sonata_ble_build_per_sync_param_t;
+
+typedef struct sonata_ble_build_scanning_param {
+    ///device's address type, @see sonata_gap_own_addr
+    uint8_t own_addr_type;
+    ///@see sonata_gap_scan_param_t
+    sonata_gap_scan_param_t create_param;
+}sonata_ble_build_scanning_param_t;
+
+typedef struct sonata_ble_build_init_param {
+    ///device's address type, @see sonata_gap_own_addr
+    uint8_t own_addr_type;
+    ///@see sonata_gap_init_param_t
+    sonata_gap_init_param_t create_param;
+}sonata_ble_build_init_param_t;
+
+
 typedef void (*PF_NOTIFY_MESH_PRF_READY)(void);
 extern PF_NOTIFY_MESH_PRF_READY pf_notify_mesh_prf_ready;
 
@@ -1944,39 +2042,6 @@ typedef enum
 typedef struct
 {
     /*************** GAP Manager  ***************/
-    ///@deprecated use @see ble_complete_callback
-    void (*ble_on_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*advertising_config_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*initiating_config_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*scanning_config_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*advertising_start_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*initiating_start_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*scanning_start_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*advertising_stopped_complete)(uint16_t reason);
-    ///@deprecated use @see ble_complete_callback
-    void (*initiating_stopped_complete)(uint16_t reason);
-    ///@deprecated use @see ble_complete_callback
-    void (*scanning_stopped_complete)(uint16_t reason);
-    ///@deprecated use @see ble_complete_callback
-    void (*advertising_deleted_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*initiating_deleted_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*scanning_deleted_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*set_advertising_data)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*set_white_list_complete)(uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    //void (*gap_profile_added)(uint16_t status);
-
     /// Callback for getting device version, BT address, advertising TX power, antenna inf.
     uint16_t (*get_local_dev_info)(sonata_gap_local_dev_info info_type, void *info);//gap_dev_version,gap_dev_bdaddr,gap_dev_adv_tx_power,gap_antenna_inf,gap_dbg_mem_info
 
@@ -2018,13 +2083,6 @@ typedef struct
                                      uint8_t clk_acc, uint16_t serv_data, uint8_t addr_type, uint8_t *addr);
 
     /*************** GAP Controller  ***************/
-    ///@deprecated use @see ble_complete_callback
-    uint16_t (*gap_disconnect_complete)(uint8_t conidx, uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*gap_params_updated_complete)(uint8_t conidx, uint16_t status);
-    ///@deprecated use @see ble_complete_callback
-    void (*gap_bond_complete)(uint8_t conidx, uint16_t status);
-
     /// Callback for disconnect IND message
     uint16_t (*gap_disconnect_ind)(uint8_t conidx,uint16_t conhdl, uint8_t reason);
 
@@ -2715,6 +2773,63 @@ uint16_t sonata_ble_gap_cte_set_tx_config(uint8_t conidx, uint8_t cte_types, uin
 
 ///@hide
 uint16_t sonata_ble_gap_cte_response_control(uint8_t conidx, bool enable);
+
+/*!
+ * @brief Control CTE transmission in a periodic advertising activity
+ * @param actv_idx  activity identifier for periodic advertising
+ * @param enable  true to enable CTE transmission , false else.
+ * @return API_SUCCESS
+ */
+uint16_t sonata_ble_gap_periodic_advertising_cte_tx_control(uint8_t actv_idx, uint8_t enable);
+/*!
+ * @brief Control capturing IQ samples from the Constant Tone Extension of periodic advertising packets in a synchronization activity
+ * @param actv_idx  activity identifier for  a synchronization activity
+ * @param enable  true to enable IQ sampling, false to disable.
+ * @param slot_dur  slot durations (1: 1us | 2: 2us)
+ * @param max_sampl_cte  max sampled CTEs(0x01-0x10)
+ * @param switching_pattern_len  length of switching pattern
+ * @param antenna_id  antenna IDs
+ * @return API_SUCCESS
+ */
+uint16_t sonata_ble_gap_periodic_advertising_iq_samples_control(uint8_t actv_idx, uint8_t enable, uint8_t slot_dur, uint8_t max_sampl_cte,
+                                                                uint8_t switching_pattern_len, uint8_t *antenna_id);
+/*!
+ * @brief  create and  start legacy advertising
+ * @param  param   @see   sonata_ble_build_legacy_adv_param_t
+ * @return API_SUCCESS , start legacy advertising  successfully.  API_FAILURE,other batch build is undergoing or param is  NULL point
+ */
+uint16_t sonata_ble_build_legacy_advertising(sonata_ble_build_legacy_adv_param_t *param);
+/*!
+ * @brief  create and  start extended advertising
+ * @param  param   @see   sonata_ble_build_extended_adv_param_t
+ * @return API_SUCCESS , start extended advertising  successfully.  API_FAILURE,other batch build is undergoing or param is  NULL point
+ */
+uint16_t sonata_ble_build_extended_advertising(sonata_ble_build_extended_adv_param_t *param);
+/*!
+ * @brief  create and  start scanning
+ * @param  param   @see   sonata_ble_build_scanning_param_t
+ * @return API_SUCCESS , start scanning  successfully.  API_FAILURE,other batch build is undergoing or param is  NULL point
+ */
+uint16_t sonata_ble_build_scanning(sonata_ble_build_scanning_param_t *param);
+/*!
+ * @brief  create and  start initiating
+ * @param  param   @see   sonata_ble_build_init_param_t
+ * @return API_SUCCESS , start initiating  successfully.  API_FAILURE,other batch build is undergoing or param is  NULL point
+ */
+uint16_t sonata_ble_build_initiating(sonata_ble_build_init_param_t *param);
+/*!
+ * @brief  create and  start periodic advertising
+ * @param  param   @see   sonata_ble_build_periodic_adv_param_t
+ * @return API_SUCCESS , start periodic advertising  successfully.  API_FAILURE,other batch build is undergoing or param is  NULL point
+ */
+uint16_t sonata_ble_build_periodic_advertising(sonata_ble_build_periodic_adv_param_t *param);
+/*!
+ * @brief  create and  start periodic synchronizing
+ * @param  param   @see   sonata_ble_build_per_sync_param_t
+ * @return API_SUCCESS , start periodic synchronizing  successfully.  API_FAILURE,other batch build is undergoing or param is NULL point
+ */
+uint16_t sonata_ble_build_peroid_sync(sonata_ble_build_per_sync_param_t *param);
+
 
 /** @}*/
 

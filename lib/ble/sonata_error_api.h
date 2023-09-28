@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -82,6 +82,8 @@
 /// asr gatt api error code
 #define SONATA_GATT_ERR_NO_ERROR                      (0X00 | SONATA_GATT_API_ERR_ID)
 #define SONATA_GATT_ERR_INVALID_PARAM                 (0x40 | SONATA_GATT_API_ERR_ID)
+#define SONATA_GATT_ERR_NO_MEMORY                     (0x41 | SONATA_GATT_API_ERR_ID)
+#define SONATA_GATT_ERR_EXCEED                        (0x42 | SONATA_GATT_API_ERR_ID)
 /// asr ll api error code
 
 /// asr sec api error code
@@ -192,7 +194,7 @@
 
 
 //hl_err
-enum stack_hl_err
+enum sonata_hl_err
 {
     /// No error
     SONATA_HL_GAP_ERR_NO_ERROR                                         = 0x00,

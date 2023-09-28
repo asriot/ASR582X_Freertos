@@ -60,7 +60,7 @@ extern "C"{
 #define SPI_FLAG_TX_FIFO_NOT_FULL      (1 << 1)
 #define SPI_FLAG_RX_FIFO_NOT_EMPTY     (1 << 2)
 #define SPI_FLAG_RX_FIFO_FULL          (1 << 3)
-#define SPI_FLAG_BUSY                  (1 << 4
+#define SPI_FLAG_BUSY                  (1 << 4)
 
 /* SPI interrupts */
 #define SPI_INTERRUPT_RX_FIFO_OVERRUN  (1 << 0)
@@ -110,6 +110,7 @@ __STATIC_INLINE ITstatus duet_spi_get_raw_interrupt_status(SPI_TypeDef * SPIx, u
 void duet_spi_interrupt_config(SPI_TypeDef * SPIx, uint8_t spi_interrupt, uint8_t new_state);
 int32_t duet_spi_dma_config(duet_spi_dev_t * spi,uint8_t dma_tx_rx_sel,uint8_t new_state);
 int32_t duet_spi_cpol_cpha_config(duet_spi_dev_t * spi,uint8_t mode);
+int32_t duet_spi_datasize(duet_spi_dev_t * spi,uint8_t data_size);
 void duet_spi_cmd(SPI_TypeDef * SPIx, uint8_t new_state);
 void duet_spi_struct_init(duet_spi_dev_t *init_struct);
 

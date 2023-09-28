@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
+ * Copyright © 2023 ASR Microelectronics (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -73,7 +73,7 @@ enum sonata_addr_type
 };
 
 ///Advertising filter policy
-enum stack_adv_filter_policy
+enum sonata_adv_filter_policy
 {
     ///Allow both scan and connection requests from anyone
     SONATA_ADV_ALLOW_SCAN_ANY_CON_ANY    = 0x00,
@@ -86,7 +86,7 @@ enum stack_adv_filter_policy
 };
 
 /// Random Address type
-enum stack_random_addr_type
+enum sonata_random_addr_type
 {
     /// Mask over the 2 MSBs
     SONATA_BD_ADDR_RND_ADDR_TYPE_MSK = 0xC0,

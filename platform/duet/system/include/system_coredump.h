@@ -59,9 +59,9 @@ extern "C" {
 #define DUET_PERI_ADDR4_START     0x40030000
 #define DUET_PERI_ADDR4_END       0x4003FFFF
 
-// shared memory(191KB)
+// shared memory(32KB)
 #define SHARED_MEMORY_ADDR_START 0x60000000
-#define SHARED_MEMORY_ADDR_END   0x6002FFFF
+#define SHARED_MEMORY_ADDR_END   0x60007FFF
 
 // duet DFE(120Bytes)
 #define DUET_DFE_ADDR_START      0x60940000

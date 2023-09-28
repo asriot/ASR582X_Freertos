@@ -273,7 +273,7 @@ int lega_wlan_start_scan_active(const char *ssid, uint8_t is_scan_advance);
  */
 int lega_wlan_start_scan_detail(char *ssid, int channel, char *bssid);
 
-/** @brief  used in station and softap mode, get mac address(in hex mode) of WIFI device
+/** @brief  get mac address(in hex mode) of WIFI device
  *
  * @param mac_addr    : pointer to get the mac address
  *
@@ -282,7 +282,7 @@ int lega_wlan_start_scan_detail(char *ssid, int channel, char *bssid);
  */
 int lega_wlan_get_mac_address(uint8_t *mac_addr);
 
-/** @brief  used in station and softap mode, set mac address for WIFI device
+/** @brief  set mac address for WIFI device
  *
  *  @param mac_addr    : 6 bytes src mac array to set, DOES NOT support string or pointer
  *
@@ -537,6 +537,20 @@ int lega_wlan_get_softap_info(lega_wlan_softap_info_t *ptr);
  *  @return    other   : error occurred
  */
 int lega_wlan_softap_deauth_peer(uint8_t *mac);
+
+/** @brief set certifacation type
+ *
+ *  @param type : cert type, 0x00: old srrc, 0x10: new srrc
+ *
+ *  @note For setting cert type API, user should call it before func lega_sram_rf_pta_init
+ */
+void lega_wlan_set_cert_type(uint8_t type);
+
+/** @brief  get current certifacation type
+ *
+ *  @return value : cert type, 0x00: old srrc, 0x10: new srrc
+ */
+uint8_t lega_wlan_get_cert_type(void);
 
 #ifdef __cplusplus
 }

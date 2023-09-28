@@ -12,36 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #ifndef _OTA_PORT_H_
 #define _OTA_PORT_H_
 
-#define _OTA_REGION_ERASE_IN_BOOTLOADER_
-//if defined, erase ota region in bootloader in order to reduce interference to network, becasue sector erase may cause more than 70ms time
-#ifdef _OTA_REGION_ERASE_IN_BOOTLOADER_
-    #define _OTA_REGION_ALWAYS_ERASE_IN_BOOTLOADER_
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 //if defined, fw version both in header and image will be checked to anti version roll back attack
 //note that this feature is not required for ali certification, and this macro need to disabled for ali certification
 //#define _FOTA_ANTI_VERSION_ROLL_BACK_EN_
 
-#ifdef _FLASH_DIRECT_BOOT_EN_ //flash direct run
-#define FLASH_START_ADDR            0x00000000
-#define USER_IMAGE_ADDR             0x00040000
-#define OTA_START_ADDR              0x00100000
-#define FLASH_OTA_INFO_ADDR         0x00010000
-#else
-#define FLASH_START_ADDR            0x10000000
-#define USER_IMAGE_ADDR             0x10012000
-#define OTA_START_ADDR              0x10100000
 #define FLASH_OTA_INFO_ADDR         0x10010000
-#endif
-#define IMAGE_MAX_SIZE              0xEE000
-#define FLASH_EMPTY_DATA            0xFFFFFFFF
 
-#define FLASH_ACCESS_CONTROL0_DEFAULT_VALUE 0x37053977
-#define FLASH_ACCESS_CONTROL1_DEFAULT_VALUE 0x000014e5
+#define FLASH_EMPTY_DATA            0xFFFFFFFF
 
 #if (defined LEGA_A0V1)
 #define IMAGE_TOKEN                     "WIFI 5501 A0V1"
@@ -71,10 +55,11 @@
 #define APP_CRC_SIZE                    4
 #define OTA_REGION_DIRTY_FLAG_SIZE      4
 #define IMAGE_ROLL_BACK_FLAG_SIZE       4
+#define IMAGE_VERIFY_DONE_SIZE          4
 #define IMAGE_RESERVED_SIZE             (IMAGE_HEADER_SIZE - IMAGE_TOKEN_SIZE - IMAGE_APP_VERSION_MAX_SIZE \
                                             - FLASH_REMAPPING_EN_SIZE - FLASH_REMAPPING_BANK_SIZE - OTA_FLAG_SIZE - IMAGE_COMPRESS_EN_SIZE \
                                             - IMAGE_LENGTH_SIZE - IMAGE_CRC_SIZE - APP_LENGTH_SIZE - APP_CRC_SIZE \
-                                            - OTA_REGION_DIRTY_FLAG_SIZE - IMAGE_ROLL_BACK_FLAG_SIZE)
+                                            - OTA_REGION_DIRTY_FLAG_SIZE - IMAGE_ROLL_BACK_FLAG_SIZE - IMAGE_VERIFY_DONE_SIZE)
 
 //size of image
 #define IMAGE_APP_VERSION_SIZE          24 //e.g. app-1.0.2-20181115.1553
@@ -98,6 +83,7 @@
     #define LEGA_OTA_DBG_MSG(...)
 #endif
 
+#define OTA_VERIFY_TOKEN 0xACDF160B
 struct OTA_INFO
 {
     char token[IMAGE_TOKEN_SIZE];
@@ -112,12 +98,15 @@ struct OTA_INFO
     uint32_t app_image_crc; //for image compress, image length after de-compress
     uint32_t ota_region_dirty_flag;
     uint32_t image_roll_back_flag;
+    uint32_t verify_done;
     uint8_t reserved[IMAGE_RESERVED_SIZE];
 };
 
 typedef enum {
     LEGA_OTA_FINISH,
-    LEGA_OTA_BREAKPOINT
+    LEGA_OTA_BREAKPOINT,
+    LEGA_OTA_VERIFY,
+    LEGA_OTA_FINISH_NOVERIFY,
 } LEGA_OTA_RES_TYPE_E;
 
 typedef struct  {
@@ -143,5 +132,9 @@ int check_remapping_en(void);
 const char *lega_ota_get_version(unsigned char dev_type);
 
 void ota_log_switch(uint8_t on_off);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //_OTA_PORT_H_

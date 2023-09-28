@@ -71,7 +71,11 @@ typedef enum
     PF_I2C0,  PF_I2C1,
     PF_SDIO0,
     PF_I2S,
-    PF_PSRAM
+    PF_PSRAM,
+    PF_SEL1, PF_SEL2, PF_SEL3,
+    SEC_FLS,
+    PF_DEBUG,
+    PF_NA
 }Pad_Func_Type;
 
 typedef enum

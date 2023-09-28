@@ -56,6 +56,8 @@
 #include "mbedtls_hw.h"
 #endif /*MBEDTLS_HW*/
 
+#if !defined(MBEDTLS_ECDSA_ALT)
+
 /* Parameter validation macros based on platform_util.h */
 #define ECDSA_VALIDATE_RET( cond )    \
     MBEDTLS_INTERNAL_VALIDATE_RET( cond, MBEDTLS_ERR_ECP_BAD_INPUT_DATA )
@@ -907,5 +909,7 @@ void mbedtls_ecdsa_restart_free( mbedtls_ecdsa_restart_ctx *ctx )
 #endif
 }
 #endif /* MBEDTLS_ECP_RESTARTABLE */
+
+#endif /* !defined(MBEDTLS_ECDSA_ALT) */
 
 #endif /* MBEDTLS_ECDSA_C */

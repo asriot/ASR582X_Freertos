@@ -79,14 +79,19 @@ void hw_watchdog_isr_clr(void)
     WATCHDOG->INTCLR = 0x1;
     hw_watchdog_lock();
 }
-
+volatile uint8_t wdg_flag = 0;
 void WDG_IRQHandler(void)
 {
     duet_intrpt_enter();
-    duet_wdg_dev_t duet_wdg_dev;
-    duet_wdg_dev.port = 0;
-    duet_wdg_reload(&duet_wdg_dev);
+    wdg_flag = 1;
+    NVIC_DisableIRQ(WDG_IRQn);
     duet_intrpt_exit();
+}
+
+//return 1: need feed; return 0: no need feed;
+int32_t duet_wdg_need_feed(void)
+{
+    return wdg_flag;
 }
 
 /**
@@ -160,6 +165,9 @@ void duet_wdg_reload(duet_wdg_dev_t *wdg)
     if(0 == wdg->port)
     {
         hw_watchdog_isr_clr();
+        wdg_flag = 0;
+        NVIC_ClearPendingIRQ(WDG_IRQn);
+        NVIC_EnableIRQ(WDG_IRQn);
     }
 }
 

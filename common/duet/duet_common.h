@@ -31,6 +31,8 @@ void udelay_pl(unsigned int us);
 int convert_str_to_int(char *str);
 void convert_int_to_str(unsigned int val, unsigned int type, char *ch);
 
+#define OTA_MAX_SIZE_SEG __attribute__((section("ota_max_size_sec")))
+
 #ifdef CFG_HIGHFREQ_VER
 #define FLASH_COMMON_SEG __attribute__((section("CODE_DTCM")))
 #else
