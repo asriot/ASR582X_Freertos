@@ -30,6 +30,11 @@
 
 OTA_MAX_SIZE_SEG const uint32_t ota_max_size = OTA_MAX_SIZE;
 
+#ifdef _CFG_SECUREBOOT_
+#define APP_SECURBOOT_CERT_AREA_TOKEN "SECURBOOT_CERT_TOKEN"
+APP_CERT_SEG const char app_cert_area[] = APP_SECURBOOT_CERT_AREA_TOKEN;
+#endif
+
 extern pmu_state_t current_state;
 extern void *_vtable_start;
 

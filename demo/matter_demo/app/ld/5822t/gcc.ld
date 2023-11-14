@@ -38,6 +38,14 @@ SHARED_MEMORY(rw)   :     ORIGIN = 0x60000000, LENGTH = 32K
 /* Define output sections */
 SECTIONS
 {
+  /* for secureboot image cert */
+  .cert :
+  {
+    /* cert area at flash */
+    KEEP(*(app_cert_sec))
+    . = ALIGN(0x1000);
+  } >FLASH AT>FLASH
+
   /* The startup code goes first into FLASH */
   .isr_vector :
   {
