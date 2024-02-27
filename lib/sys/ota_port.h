@@ -23,9 +23,9 @@ extern "C" {
 //note that this feature is not required for ali certification, and this macro need to disabled for ali certification
 //#define _FOTA_ANTI_VERSION_ROLL_BACK_EN_
 
-#define FLASH_OTA_INFO_ADDR         0x10010000
+#define FLASH_OTA_INFO_ADDR             0x10010000
 
-#define FLASH_EMPTY_DATA            0xFFFFFFFF
+#define FLASH_EMPTY_DATA                0xFFFFFFFF
 
 #if (defined LEGA_A0V1)
 #define IMAGE_TOKEN                     "WIFI 5501 A0V1"
@@ -37,9 +37,9 @@ extern "C" {
 #define OTA_TAG_VALUE                   0x00000000
 #define FLASH_REMAPPING_EN_VALUE        0x00000000
 #define IMAGE_COMPRESS_EN_VALUE         0x00000000
-#define OTA_REGION_DIRTY_FLAG_VALUE        0x00000000
-#define FLASH_REMAPPING_BANK0_VALUE        0xFFFFFFFF
-#define FLASH_REMAPPING_BANK1_VALUE        0x00000000
+#define OTA_REGION_DIRTY_FLAG_VALUE     0x00000000
+#define FLASH_REMAPPING_BANK0_VALUE     0xFFFFFFFF
+#define FLASH_REMAPPING_BANK1_VALUE     0x00000000
 
 //size of image header
 #define IMAGE_HEADER_SIZE               128
@@ -57,9 +57,9 @@ extern "C" {
 #define IMAGE_ROLL_BACK_FLAG_SIZE       4
 #define IMAGE_VERIFY_DONE_SIZE          4
 #define IMAGE_RESERVED_SIZE             (IMAGE_HEADER_SIZE - IMAGE_TOKEN_SIZE - IMAGE_APP_VERSION_MAX_SIZE \
-                                            - FLASH_REMAPPING_EN_SIZE - FLASH_REMAPPING_BANK_SIZE - OTA_FLAG_SIZE - IMAGE_COMPRESS_EN_SIZE \
-                                            - IMAGE_LENGTH_SIZE - IMAGE_CRC_SIZE - APP_LENGTH_SIZE - APP_CRC_SIZE \
-                                            - OTA_REGION_DIRTY_FLAG_SIZE - IMAGE_ROLL_BACK_FLAG_SIZE - IMAGE_VERIFY_DONE_SIZE)
+                                        - FLASH_REMAPPING_EN_SIZE - FLASH_REMAPPING_BANK_SIZE - OTA_FLAG_SIZE - IMAGE_COMPRESS_EN_SIZE \
+                                        - IMAGE_LENGTH_SIZE - IMAGE_CRC_SIZE - APP_LENGTH_SIZE - APP_CRC_SIZE \
+                                        - OTA_REGION_DIRTY_FLAG_SIZE - IMAGE_ROLL_BACK_FLAG_SIZE - IMAGE_VERIFY_DONE_SIZE)
 
 //size of image
 #define IMAGE_APP_VERSION_SIZE          24 //e.g. app-1.0.2-20181115.1553
@@ -70,20 +70,23 @@ extern "C" {
 
 #define IMAGE_HEADER_OFFSET             0x0 //offset in flash region
 #define OTA_IMAGE_CRC_OFFSET            (IMAGE_TOKEN_SIZE + IMAGE_APP_VERSION_MAX_SIZE \
-                                            + FLASH_REMAPPING_EN_SIZE + FLASH_REMAPPING_BANK_SIZE + OTA_FLAG_SIZE + IMAGE_COMPRESS_EN_SIZE \
-                                            + IMAGE_LENGTH_SIZE)
+                                        + FLASH_REMAPPING_EN_SIZE + FLASH_REMAPPING_BANK_SIZE + OTA_FLAG_SIZE + IMAGE_COMPRESS_EN_SIZE \
+                                        + IMAGE_LENGTH_SIZE)
 
 //offset in pure image
-#define IMAGE_APP_VERSION_OFFSET            0x100
+#define IMAGE_APP_VERSION_OFFSET        0x100
 
 #define _LEGA_OTA_DBG_EN_
 #ifdef _LEGA_OTA_DBG_EN_
-    #define LEGA_OTA_DBG_MSG ota_log_printf
+    #define LEGA_OTA_DBG_MSG            ota_log_printf
 #else
     #define LEGA_OTA_DBG_MSG(...)
 #endif
 
-#define OTA_VERIFY_TOKEN 0xACDF160B
+#define OTA_VERIFY_TOKEN                0xACDF160B
+
+#define WRITE_DATA_ALIGN_SIZE           0x100
+
 struct OTA_INFO
 {
     char token[IMAGE_TOKEN_SIZE];
@@ -109,6 +112,11 @@ typedef enum {
     LEGA_OTA_FINISH_NOVERIFY,
 } LEGA_OTA_RES_TYPE_E;
 
+typedef enum {
+    LEGA_OTA_OK = 0,// No error, operation OK
+    LEGA_OTA_INIT_ALREADY = -2,// ota init already
+} LEGA_OTA_RETURN_TYPE_E;
+
 typedef struct  {
     unsigned int dst_adr;
     unsigned int src_adr;
@@ -118,7 +126,7 @@ typedef struct  {
     unsigned char boot_count;
     unsigned int  rec_size;
     unsigned int  splict_size;
-    int off_bp;               /*Break point offset*/
+    int off_bp; /*Break point offset*/
     LEGA_OTA_RES_TYPE_E  res_type; /*result type: OTA_FINISH, OTA_BREAKPOINT*/
     unsigned short param_crc; /*Parameter crc*/
 } __attribute__((packed)) lega_ota_boot_param_t;

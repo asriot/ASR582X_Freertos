@@ -20,7 +20,7 @@
 extern "C"{
 #endif
 
-#define EFUSE_READ_OP_WAIT_CYCLE        10
+#define EFUSE_READ_OP_WAIT_CYCLE        5
 #define EFUSE_WRITE_OP_WAIT_CYCLE       (SYSTEM_CLOCK/100000) //10us
 #define EFUSE_DIV_OP_WAIT_CYCLE         31
 

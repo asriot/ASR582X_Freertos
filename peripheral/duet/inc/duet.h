@@ -613,7 +613,8 @@ struct DUET_RETENTION_SRAM
     __IO uint8_t RTC_DATE[16];
     __IO uint32_t BOOT_CFG;
     __IO uint32_t BOOT_TYPE;
-    uint8_t RSVD1[40];
+    __IO uint32_t BOOT_TYPE_SW_RESET;  /* sw reset flag */
+    uint8_t RSVD1[36];
 };
 
 #define RETENTION_RAM_ADDR                0x40008000

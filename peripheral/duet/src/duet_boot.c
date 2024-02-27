@@ -55,7 +55,34 @@ void duet_set_ds_boot_type(void)
     RETENTION_SRAM->BOOT_CFG = RET_RAM_DS_RST_FLAG;
 }
 
+void duet_set_sw_hf_reset_boot_type(void) //hardfault reset
+{
+    RETENTION_SRAM->BOOT_TYPE_SW_RESET = RET_RAM_HF_RST_FLAG;
+}
+
 uint32_t duet_get_boot_type(void)
 {
+    uint32_t status;
+
+    if(RETENTION_SRAM->BOOT_TYPE == SOFTWARE_RST)
+    {
+        status = REG_RD(AON_CPU_RESET_STATUS);
+
+        if(status == RBK_CPU_REQ_RESET)
+        {
+            REG_WR(AON_CPU_RESET_STATUS, RBK_CPU_REQ_RESET);
+            if(RETENTION_SRAM->BOOT_TYPE_SW_RESET != 0)
+            {
+                if(RETENTION_SRAM->BOOT_TYPE_SW_RESET == RET_RAM_HF_RST_FLAG)  //hardfault reset
+                    RETENTION_SRAM->BOOT_TYPE = HARDFAULT_RST;
+                RETENTION_SRAM->BOOT_TYPE_SW_RESET = 0;
+            }
+        }
+        else if(status == RBK_WDG_REQ_RESET)
+        {
+            REG_WR(AON_CPU_RESET_STATUS, RBK_WDG_REQ_RESET);
+            RETENTION_SRAM->BOOT_TYPE = WDG_RST;
+        }
+    }
     return (RETENTION_SRAM->BOOT_TYPE);
 }

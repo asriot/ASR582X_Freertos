@@ -27,7 +27,11 @@ uint32_t system_core_clk = SYSTEM_CORE_CLOCK_INIT;
 uint32_t system_peri_clk = SYSTEM_BUS_CLOCK_INIT;
 
 /* note:core high freq mode modify Core_freq_config to SYSTEM_CORE_FREQ_120M */
+#ifdef CFG_CORE_FREQ_120M
+Core_freq_type Core_freq_config = SYSTEM_CORE_FREQ_120M;
+#else
 Core_freq_type Core_freq_config = SYSTEM_CORE_FREQ_52M;
+#endif
 
 #ifdef CFG_RESET_OPT
 extern void lega_drv_open_dcdc_pfm(void);

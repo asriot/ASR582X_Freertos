@@ -100,7 +100,7 @@ typedef struct {
 #define NVM_CTRL_WR_LOCK        *((volatile unsigned int *)(0x40000A04))
 #define FLASH_ACCESS_CONTROL0   *((volatile unsigned int *)(0x40000A08))
 #define FLASH_ACCESS_CONTROL1   *((volatile unsigned int *)(0x40000A0C))
-
+#define FLASH_REMAPPING_REG     *((volatile unsigned int *)(0x4000006C))
 #define FLASH_CACHE_CTRL        *((volatile unsigned int *)(0x4001C000))
 
 #define CACHE_BYPASS            (1 << 1)

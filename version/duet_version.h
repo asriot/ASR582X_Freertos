@@ -16,8 +16,14 @@
 #define _DUET_VERSION_H_
 
 //ASR release version
-#define LEGA_VERSION_STR      "APP-V1.9.0"
+#if defined(CFG_DUET_5822T)
+#define LEGA_VERSION_PREIFX     "5822T-APP-"
+#elif defined(CFG_DUET_5822S)
+#define LEGA_VERSION_PREIFX     "5822S-APP-"
+#else
+#define LEGA_VERSION_PREIFX     "5822NC-APP-"
+#endif
+
+#define LEGA_VERSION_STR        LEGA_VERSION_PREIFX"V1.9.1"
 
 #endif  //_DUET_VERSION_H_
-
-

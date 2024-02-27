@@ -718,6 +718,8 @@ typedef enum
     SONATA_GAP_ACTV_TYPE_INIT,
     /// Periodic synchronization activity
     SONATA_GAP_ACTV_TYPE_PER_SYNC,
+    /// invalid type
+    SONATA_GAP_ACTV_TYPE_INVALID,
 }sonata_gap_actv_type;
 
 /// Type of advertising that can be created
@@ -1822,6 +1824,8 @@ typedef enum
     SONATA_GAP_CMP_INITIATING_DELETE                         =0x0F10,
     /// Delete period sync mode complete
     SONATA_GAP_CMP_PERIOD_SYNC_DELETE                        =0x0F11,
+    /// Delete act complete
+    SONATA_GAP_CMP_ACT_INVALID                               =0x0F12,
 
     //System event                           GAPM
     /// Reset BLE subsystem: LL and HL.

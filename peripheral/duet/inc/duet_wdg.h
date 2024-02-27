@@ -32,7 +32,7 @@ typedef struct {
     void        *priv;   /* priv data */
 } duet_wdg_dev_t;
 
-#define WDG_TIMEOUT_MS (10000*(SYSTEM_CLOCK_NORMAL/SYSTEM_CLOCK))  // between 5s and 10s
+#define WDG_TIMEOUT_MS (10000)  // between 5s and 10s
 
 /**
  * This function will initialize the on board CPU hardware watch dog
